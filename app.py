@@ -149,15 +149,19 @@ def process_data(df):
     
     # 3. Keyword-based Categorization Engine
     def auto_categorize(description):
-        desc = str(description).lower()
-        # Groceries
-        if any(kw in desc for kw in ['walmart', 'target', 'grocery']):
+        desc = str(description)
+        # 中文记账格式：一级分类-二级分类 备注
+        if '-' in desc:
+            primary = desc.split('-')[0].strip()
+            if primary:
+                return primary
+        # 英文关键词兼容（原始测试数据）
+        desc_lower = desc.lower()
+        if any(kw in desc_lower for kw in ['walmart', 'target', 'grocery']):
             return 'Groceries'
-        # Subscriptions
-        elif any(kw in desc for kw in ['netflix', 'spotify', 'hulu']):
+        elif any(kw in desc_lower for kw in ['netflix', 'spotify', 'hulu']):
             return 'Subscriptions'
-        # Transportation
-        elif any(kw in desc for kw in ['gas', 'shell', 'uber']):
+        elif any(kw in desc_lower for kw in ['gas', 'shell', 'uber']):
             return 'Transportation'
         # Default
         return 'Other'
